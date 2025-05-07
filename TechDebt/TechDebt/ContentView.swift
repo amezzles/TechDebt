@@ -13,7 +13,15 @@ struct ContentView: View {
     var body: some View {
         switch manager.menuState
         {
-            case .home: MainMenu(appManager: manager)
+        case .mainMenu: MainMenu(appManager: manager)
+        case .getStarted: GetStarted(appManager: manager)
+        case .sBudgetAmount: SetBudgetAmountSetup(appManager: manager)
+        case .sBudgetPeriod: SetBudgetPeriodSetup(appManager: manager)
+        case .sRegularExpenditure: RegularExpendituresSetup(appManager: manager)
+        case .sSavingGoal: SavingsGoalSetup(appManager: manager)
+        case .settings: AppSettings(appManager: manager)
+        case .regularExpenditure: RegularExpenditure(appManager: manager)
+        case .transactionHistory: TransactionHistory(appManager: manager)
         }
     }
 }
