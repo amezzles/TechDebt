@@ -8,17 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-        //changes
-        //changes 2
+    @ObservedObject var manager = AppManager.instance
     
+    var body: some View {
+        switch manager.menuState
+        {
+            case .home: MainMenu(appManager: manager)
+        }
     }
 }
 
