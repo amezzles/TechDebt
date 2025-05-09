@@ -8,14 +8,14 @@ final class AppDataManager: ObservableObject {
     
     @Published var data: AppData = AppData()
     
-    func Save(appData: AppData)
+    func Save()
     {
         if let encoded = try? JSONEncoder().encode(data) {
             UserDefaults.standard.set(data, forKey: SaveKey)
         }
     }
     
-    func Load()
+    private func Load()
     {
         if let savedData = UserDefaults.standard.data(forKey: SaveKey),
            let decoded = try? JSONDecoder().decode(AppData.self, from: savedData) {
