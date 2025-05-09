@@ -11,7 +11,7 @@ final class AppDataManager: ObservableObject {
     func Save()
     {
         if let encoded = try? JSONEncoder().encode(data) {
-            UserDefaults.standard.set(data, forKey: SaveKey)
+            UserDefaults.standard.set(encoded, forKey: SaveKey)
         }
     }
     
@@ -21,6 +21,12 @@ final class AppDataManager: ObservableObject {
            let decoded = try? JSONDecoder().decode(AppData.self, from: savedData) {
             data = decoded
         }
+    }
+    
+    func Reset()
+    {
+        data = AppData()
+        Save()
     }
     
 }
