@@ -5,9 +5,14 @@ enum MenuState { case getStarted, sBudgetAmount, sBudgetPeriod, sRegularExpendit
 final class AppManager: ObservableObject {
     static var instance = AppManager()
     private init() {
-        if(!appData.data.hasSet) { menuState = .getStarted }
+        if(!appData.data.hasSet) { menuState = .settings }
     }
     
     @Published var menuState: MenuState = .mainMenu
     @Published var appData: AppDataManager = AppDataManager()
+    
+    func Reset(){
+        appData.Reset()
+        menuState = .getStarted
+    }
 }
