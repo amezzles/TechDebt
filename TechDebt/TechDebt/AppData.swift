@@ -32,10 +32,10 @@ final class AppDataManager: ObservableObject {
 }
 
 struct AppData : Codable {
-    var budgetAmount = 0
-    var budgetRemaining = 0
-    var budgePeriod = 0
-    var saveAmount = 0
-    var saveGoalText = 0
+    var budgetAmount: Float = 0.0
+    var budgetRemaining: Float = 0.0
+    var budgetPeriod: Int = 0
+    var saveAmount: Float = 0.0
+    var saveGoalText: String = ""
     var hasSet = false
 }

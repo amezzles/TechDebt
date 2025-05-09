@@ -5,7 +5,7 @@ struct GetStarted: View {
     
     var body: some View {
         ZStack{
-            Text("hi")
+            Text("\(CurrencyFormatter.FloatToCurrency(floatVal: appManager.appData.data.budgetAmount))")
         }
     }
 }
