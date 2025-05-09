@@ -22,6 +22,7 @@ struct ContentView: View {
         case .settings: AppSettings(appManager: manager)
         case .regularExpenditure: RegularExpenditure(appManager: manager)
         case .transactionHistory: TransactionHistory(appManager: manager)
+        case .addTransaction: AddTransaction(appManager: manager)
         }
     }
 }
