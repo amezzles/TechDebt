@@ -4,7 +4,7 @@ final class AppDataManager: ObservableObject {
     static var instance = AppDataManager()
     public init() { Load() }
     
-    private let SaveKey = "aljokliadhzolyl"
+    private let SaveKey = "TechDebt"
     
     @Published var data: AppData = AppData()
     
@@ -34,8 +34,8 @@ final class AppDataManager: ObservableObject {
 struct AppData : Codable {
     var budgetAmount: Float = 0.0
     var budgetRemaining: Float = 0.0
-    var budgePeriod: Int = 0
-    var saveAmount: Float = 0
+    var budgetPeriod: Int = 0
+    var saveAmount: Float = 0.0
     var saveGoalText: String = ""
-    var hasSet: Bool = false
+    var hasSet = false
 }
