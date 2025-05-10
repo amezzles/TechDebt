@@ -9,7 +9,7 @@ final class AppManager: ObservableObject {
     }
     
     @Published var menuState: MenuState = .mainMenu
-    @Published var appData: AppDataManager = AppDataManager()
+    var appData: AppDataManager = AppDataManager.instance
     
     func Reset(){
         appData.Reset()

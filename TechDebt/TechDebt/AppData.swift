@@ -1,7 +1,7 @@
 import SwiftUI
 
 final class AppDataManager: ObservableObject {
-    static var instance = AppDataManager()
+    static let instance = AppDataManager()
     public init() { Load() }
     
     private let SaveKey = "TechDebt"
@@ -29,6 +29,34 @@ final class AppDataManager: ObservableObject {
         Save()
     }
     
+    func SetBudgetAmount(stringVal: String) -> String {
+        data.budgetAmount = ConvertValue.CurrencyToFloat(stringVal: stringVal)
+        Save()
+        return ConvertValue.FloatToCurrency(floatVal: data.budgetAmount)
+    }
+    
+    func SetBudgetPeriod(stringVal: String) -> String {
+        let budgetPeriod = ConvertValue.DaysToInt(stringVal: stringVal)
+        if budgetPeriod <= 0 {
+            return ConvertValue.IntToDays(intVal: data.budgetPeriod)
+        }
+        data.budgetPeriod = budgetPeriod
+        Save()
+        return ConvertValue.IntToDays(intVal: data.budgetPeriod)
+    }
+    
+    func SetSaveGoalAmount(stringVal: String) -> String {
+        data.saveAmount = ConvertValue.CurrencyToFloat(stringVal: stringVal)
+        Save()
+        return ConvertValue.FloatToCurrency(floatVal: data.saveAmount)
+    }
+    
+    func SetSaveGoalText(stringVal: String) -> String {
+        data.saveGoalText = stringVal
+        Save()
+        return data.saveGoalText
+    }
+    
 }
 
 struct AppData : Codable {
@@ -37,5 +65,17 @@ struct AppData : Codable {
     var budgetPeriod: Int = 0
     var saveAmount: Float = 0.0
     var saveGoalText: String = ""
+    var regularExpenditures: [ExpenditureItem] = []
     var hasSet = false
+}
+
+struct ExpenditureItem: Codable {
+    var expenditureName: String = ""
+    var expenditureAmount: Float = 0.0
+    var expenditurePeriod: Int = 0
+    var expenditureAmountPerBudgetPeriod: Float = 0.0
+    
+    mutating func SetExpenditureForBudget(period: Int) {
+        expenditureAmountPerBudgetPeriod = (expenditureAmount / Float(expenditurePeriod)) * Float(period)
+    }
 }
