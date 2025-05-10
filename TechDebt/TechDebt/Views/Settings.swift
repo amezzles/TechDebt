@@ -26,6 +26,17 @@ struct AppSettings: View {
                     .padding(.top, 5.0)
                 
                 Spacer()
+                
+                HStack {
+                    Text("Budget Amount")
+                        .font(.system(size: 24))
+                        .padding(.leading, 30.0)
+                    Spacer()
+                }
+                TextField("Enter Budget Amount", text: $budgetAmountText)
+                    .keyboardType(.decimalPad)
+                
+                Spacer()
             }
         }
         .onDisappear() { appManager.appData.Save() }
