@@ -25,6 +25,8 @@ struct AppSettings: View {
                     .multilineTextAlignment(.center)
                     .padding(.top, 5.0)
                 
+                Text("\(appManager.appData.data.budgetAmount)")
+                
                 Spacer()
                 
                 HStack {
@@ -35,6 +37,12 @@ struct AppSettings: View {
                 }
                 TextField("Enter Budget Amount", text: $budgetAmountText)
                     .keyboardType(.decimalPad)
+                    .onSubmit {
+                        let floatValue = CurrencyFormatter.CurrencyToFloat(stringVal: budgetAmountText)
+                        appManager.appData.data.budgetAmount = floatValue
+                        appManager.appData.Save()
+                        budgetAmountText = CurrencyFormatter.FloatToCurrency(floatVal: floatValue)
+                    }
                 
                 Spacer()
             }
