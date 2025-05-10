@@ -13,16 +13,15 @@ struct ContentView: View {
     var body: some View {
         switch manager.menuState
         {
-        case .mainMenu: MainMenu(appManager: manager)
-        case .getStarted: GetStarted(appManager: manager)
-        case .sBudgetAmount: SetBudgetAmountSetup(appManager: manager)
-        case .sBudgetPeriod: SetBudgetPeriodSetup(appManager: manager)
-        case .sRegularExpenditure: RegularExpendituresSetup(appManager: manager)
-        case .sSavingGoal: SavingsGoalSetup(appManager: manager)
-        case .settings: AppSettings(appManager: manager)
-        case .regularExpenditure: RegularExpenditure(appManager: manager)
-        case .transactionHistory: TransactionHistory(appManager: manager)
-        case .addTransaction: AddTransaction(appManager: manager)
+        case .mainMenu: MainMenu(appManager: manager, appData: manager.appData)
+        case .getStarted: GetStarted(appManager: manager, appData: manager.appData)
+        case .sBudgetAmount: SetBudgetAmountSetup(appManager: manager, appData: manager.appData)
+        case .sBudgetPeriod: SetBudgetPeriodSetup(appManager: manager, appData: manager.appData)
+        case .sRegularExpenditure: RegularExpendituresSetup(appManager: manager, appData: manager.appData)
+        case .sSavingGoal: SavingsGoalSetup(appManager: manager, appData: manager.appData)
+        case .settings: AppSettings(appManager: manager, appData: manager.appData)
+        case .regularExpenditure: RegularExpenditure(appManager: manager, appData: manager.appData)
+        case .transactionHistory: TransactionHistory(appManager: manager, appData: manager.appData)
         }
     }
 }
