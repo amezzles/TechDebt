@@ -11,14 +11,37 @@ struct AddTransaction: View {
     @ObservedObject var appManager: AppManager
     @ObservedObject var appData: AppDataManager
     
-    @State private var amount: String = ""
+    @State private var amount: String = "0.00"
     @State private var category: String = ""
-    @State private var isFormValid: Bool = true
+//    @State private var isFormValid: Bool = ni
+    
+    var isFormValid: Bool {
+        !amount.isEmpty && !category.isEmpty && Float(amount) != nil
+    }
+    
+    private func saveTransaction() {
+    
+        _ = appData.SetBudgetRemainingAfterTransaction(stringVal: amount)
+
+        amount = ""
+        category = ""
+    }
+
     
     var body: some View {
         ZStack{
             Color.white.ignoresSafeArea()
             VStack(spacing: 50) {
+                
+//                VStack {
+//                    Text("Budget Remaining")
+//                        .font(.system(size: 20, weight: .medium))
+//                        .foregroundColor(.gray)
+//                    Text(String(format: "$%.2f", appData.data.budgetRemaining))
+//                        .font(.system(size: 32, weight: .bold))
+//                        .foregroundColor(.black)
+//                }
+                
                 Text("New Transaction")
                     .font(.system(size: 40, weight: .bold) )
                     .fontWeight(.bold)
@@ -48,6 +71,7 @@ struct AddTransaction: View {
 
                 Button(action: {
                     print("Button tapped")
+                    saveTransaction()
                 }) {
                     Text("Save")
                         .font(.system(size: 20, weight: .semibold))
@@ -63,11 +87,22 @@ struct AddTransaction: View {
             }
         }
     }
+    
 }
+
+
 
 //
 //#Preview {
 //    AddTransaction(appManager: AppManager(), appData: AppDataManager())
+//}
+
+//#Preview {
+//    let appManager = AppManager()
+//    let appData = AppDataManager()
+//    appData.data.budgetRemaining = 1000.0
+//    appData.data.budgetAmount = 1500.0
+//    return AddTransaction(appManager: appManager, appData: appData)
 //}
 
 

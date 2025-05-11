@@ -35,6 +35,18 @@ final class AppDataManager: ObservableObject {
         return ConvertValue.FloatToCurrency(floatVal: data.budgetAmount)
     }
     
+    func SetBudgetRemaining(stringVal: String) -> String {
+        data.budgetRemaining = ConvertValue.CurrencyToFloat(stringVal: stringVal)
+        Save()
+        return ConvertValue.FloatToCurrency(floatVal: data.budgetRemaining)
+    }
+    
+    func SetBudgetRemainingAfterTransaction(stringVal: String) -> String {
+        data.budgetRemaining -= ConvertValue.CurrencyToFloat(stringVal: stringVal)
+        Save()
+        return ConvertValue.FloatToCurrency(floatVal: data.budgetRemaining)
+    }
+    
     func SetBudgetPeriod(stringVal: String) -> String {
         let budgetPeriod = ConvertValue.DaysToInt(stringVal: stringVal)
         if budgetPeriod <= 0 {

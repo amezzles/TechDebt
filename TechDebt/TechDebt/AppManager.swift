@@ -4,7 +4,7 @@ enum MenuState { case getStarted, sBudgetAmount, sBudgetPeriod, sRegularExpendit
 
 final class AppManager: ObservableObject {
     static var instance = AppManager()
-    private init() {
+    init() {
         if(!appData.data.hasSet) { menuState = .getStarted }
     }
     
