@@ -1,5 +1,21 @@
 import SwiftUI
 
+enum BudgetCycle: String, Codable, CaseIterable, Identifiable {
+    case weekly = "Weekly"
+    case biWeekly = "Bi-Weekly"
+    case monthly = "Monthly"
+
+    var id: String { self.rawValue }
+
+    var days: Int {
+        switch self {
+        case .weekly: return 7
+        case .biWeekly: return 14
+        case .monthly: return 30
+        }
+    }
+}
+
 final class AppDataManager: ObservableObject {
     static let instance = AppDataManager()
     public init() { Load() }
@@ -69,9 +85,57 @@ final class AppDataManager: ObservableObject {
         return data.saveGoalText
     }
     
+    func setBudgetName(_ name: String) {
+            data.budgetName = name
+        }
+
+        func setBudgetCycle(_ cycle: BudgetCycle) {
+            data.budgetCycle = cycle
+            data.budgetPeriod = cycle.days
+            recalculateBudgetAmountPerPeriod()
+        }
+
+        func setBudgetStartDate(_ date: Date) {
+            data.budgetStartDate = date
+        }
+
+        func setYearlyEarnings(stringVal: String) {
+            data.yearlyEarnings = ConvertValue.CurrencyToFloat(stringVal: stringVal)
+            recalculateBudgetAmountPerPeriod()
+        }
+
+        func getYearlyEarningsString() -> String {
+            return ConvertValue.FloatToCurrency(floatVal: data.yearlyEarnings)
+        }
+        
+        func finalizeBudgetDetails() {
+            recalculateBudgetAmountPerPeriod()
+        }
+        
+        private func recalculateBudgetAmountPerPeriod() {
+            guard data.yearlyEarnings > 0 else {
+                data.budgetAmount = 0
+                return
+            }
+
+            let periodsInYear: Float
+            switch data.budgetCycle {
+            case .weekly:
+                periodsInYear = 365.25 / 7.0
+            case .biWeekly:
+                periodsInYear = 365.25 / 14.0
+            case .monthly:
+                periodsInYear = 12.0
+            }
+            data.budgetAmount = data.yearlyEarnings / periodsInYear
+        }
 }
 
 struct AppData : Codable {
+    var budgetName: String = ""
+    var budgetCycle: BudgetCycle = .monthly
+    var budgetStartDate: Date = Date()
+    var yearlyEarnings: Float = 0.0
     var budgetAmount: Float = 0.0
     var budgetRemaining: Float = 0.0
     var budgetPeriod: Int = 0
