@@ -13,44 +13,59 @@ struct AddTransaction: View {
     
     @State private var amount: String = ""
     @State private var category: String = ""
+    @State private var isFormValid: Bool = true
     
     var body: some View {
         ZStack{
             Color.white.ignoresSafeArea()
-            VStack(spacing: 30) {
+            VStack(spacing: 50) {
                 Text("New Transaction")
-                    .font(.title)
+                    .font(.system(size: 40, weight: .bold) )
                     .fontWeight(.bold)
                     .foregroundColor(.black)
-                Text("$")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(.black)
-                TextField("0", text: $amount)
-                    .keyboardType(.decimalPad)
-                Text("Category")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(.black)
-                TextField("", text: $category)
-                    .keyboardType(.default)
-                    .background(.gray.opacity(0.2))
+                
+                HStack(alignment: .firstTextBaseline, spacing: 2) {
+                    Text("$")
+                        .font(.system(size: 40, weight: .bold))
+                    TextField("0.00", text: $amount)
+                        .keyboardType(.decimalPad)
+                        .font(.system(size: 40, weight: .bold))
+                        .multilineTextAlignment(.leading)
+                        .frame(width: 100)
+                }
+
+                
+                HStack(spacing: 20) {
+                    Text("Category")
+                        .font(.system(size: 25, weight: .semibold))
+                    TextField("", text: $category)
+                        .padding(10)
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(5)
+                        .frame(width: 160)
+                }
+
+
                 Button(action: {
-                    print("Button was tapped!")
+                    print("Button tapped")
                 }) {
                     Text("Save")
-                        .padding()
-                        .background(Color.blue)
+                        .font(.system(size: 20, weight: .semibold))
                         .foregroundColor(.white)
-                        .cornerRadius(10)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(isFormValid ? Color.black : Color.gray)
+                        .cornerRadius(20)
+                        .padding(.horizontal, 50)
                 }
+                .disabled(!isFormValid) // disables the button when form is invalid
                 
             }
         }
     }
 }
 
-
+//
 //#Preview {
 //    AddTransaction(appManager: AppManager(), appData: AppDataManager())
 //}
