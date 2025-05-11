@@ -37,7 +37,7 @@ struct GetStarted: View {
             Spacer()
 
             Button(action: {
-                appManager.menuState = .sBudgetAmount
+                appManager.menuState = .sBudgetDetails
             }) {
                 Text("Get Started")
                     .font(.title2)
@@ -45,7 +45,7 @@ struct GetStarted: View {
                     .foregroundColor(.white)
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(Color.accentColor) // Use your app's accent color
+                    .background(Color.accentColor)
                     .cornerRadius(12)
                     .shadow(radius: 5)
             }
