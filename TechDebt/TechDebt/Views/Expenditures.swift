@@ -27,7 +27,6 @@ struct AddTransaction: View {
         category = ""
     }
 
-    
     var body: some View {
         ZStack{
             Color.white.ignoresSafeArea()
@@ -89,21 +88,3 @@ struct AddTransaction: View {
     }
     
 }
-
-
-
-//
-//#Preview {
-//    AddTransaction(appManager: AppManager(), appData: AppDataManager())
-//}
-
-//#Preview {
-//    let appManager = AppManager()
-//    let appData = AppDataManager()
-//    appData.data.budgetRemaining = 1000.0
-//    appData.data.budgetAmount = 1500.0
-//    return AddTransaction(appManager: appManager, appData: appData)
-//}
-
-
-
