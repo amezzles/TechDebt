@@ -26,12 +26,22 @@ struct AddTransaction: View {
         amount = ""
         category = ""
     }
-
     
+    func CloseSettings(){
+        appManager.menuState = .mainMenu
+    }
+
     var body: some View {
         ZStack{
             Color.white.ignoresSafeArea()
             VStack(spacing: 50) {
+                
+                Button(action: CloseSettings) {
+                    Text("Close")
+                        .font(.system(size: 24))
+                        .padding(.top, 10.0)
+                        .padding(.leading, 30.0)
+                }
                 
 //                VStack {
 //                    Text("Budget Remaining")
@@ -84,26 +94,9 @@ struct AddTransaction: View {
                 }
                 .disabled(!isFormValid) // disables the button when form is invalid
                 
+               
             }
         }
     }
     
 }
-
-
-
-//
-//#Preview {
-//    AddTransaction(appManager: AppManager(), appData: AppDataManager())
-//}
-
-//#Preview {
-//    let appManager = AppManager()
-//    let appData = AppDataManager()
-//    appData.data.budgetRemaining = 1000.0
-//    appData.data.budgetAmount = 1500.0
-//    return AddTransaction(appManager: appManager, appData: appData)
-//}
-
-
-
