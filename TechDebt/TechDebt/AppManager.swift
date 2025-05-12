@@ -1,18 +1,23 @@
 import SwiftUI
 
-enum MenuState { case getStarted, sBudgetAmount, sBudgetPeriod, sRegularExpenditure, sSavingGoal, mainMenu, settings, regularExpenditure, transactionHistory }
+enum MenuState { case getStarted, sBudgetDetails, sRegularExpenditure, sSavingGoal, mainMenu, settings, regularExpenditure, transactionHistory, addTransaction}
 
 final class AppManager: ObservableObject {
-    static var instance = AppManager()
-    private init() {
-        if(!appData.data.hasSet) { menuState = .getStarted }
-    }
-    
-    @Published var menuState: MenuState = .mainMenu
+    static let instance = AppManager()
     var appData: AppDataManager = AppDataManager.instance
-    
-    func Reset(){
-        appData.Reset()
-        menuState = .getStarted
-    }
+
+        @Published var menuState: MenuState
+
+        private init() {
+            if !self.appData.data.hasSet {
+                self.menuState = .getStarted
+            } else {
+                self.menuState = .mainMenu
+            }
+        }
+
+        func Reset(){
+            appData.Reset()
+            menuState = .getStarted
+        }
 }

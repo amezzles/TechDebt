@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		6C89AD3E2DD186EB00B941CE /* Kaph-Regular copy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6C89AD3D2DD186EB00B941CE /* Kaph-Regular copy.ttf */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		6C365A832DC47DD100ED5013 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,11 +31,25 @@
 		6C365A712DC47DCF00ED5013 /* TechDebt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TechDebt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C365A822DC47DD100ED5013 /* TechDebtTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TechDebtTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C365A8C2DC47DD100ED5013 /* TechDebtUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TechDebtUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6C89AD3D2DD186EB00B941CE /* Kaph-Regular copy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Kaph-Regular copy.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6C89ACD22DD04DE100B941CE /* Exceptions for "TechDebt" folder in "TechDebt" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 6C365A702DC47DCF00ED5013 /* TechDebt */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6C365A732DC47DCF00ED5013 /* TechDebt */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6C89ACD22DD04DE100B941CE /* Exceptions for "TechDebt" folder in "TechDebt" target */,
+			);
 			path = TechDebt;
 			sourceTree = "<group>";
 		};
@@ -79,6 +97,7 @@
 				6C365A852DC47DD100ED5013 /* TechDebtTests */,
 				6C365A8F2DC47DD100ED5013 /* TechDebtUITests */,
 				6C365A722DC47DCF00ED5013 /* Products */,
+				6C89AD3D2DD186EB00B941CE /* Kaph-Regular copy.ttf */,
 			);
 			sourceTree = "<group>";
 		};
@@ -212,6 +231,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6C89AD3E2DD186EB00B941CE /* Kaph-Regular copy.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,6 +414,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"TechDebt/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TechDebt/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -432,6 +453,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"TechDebt/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TechDebt/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
