@@ -5,7 +5,6 @@ struct AppSettings: View {
     @ObservedObject var appData: AppDataManager
     
     @State private var budgetAmountText = ""
-    @State private var budgetPeriodText = ""
     @State private var selectedCycle: BudgetCycle = .weekly
     @State private var saveGoalAmountText = ""
     @State private var saveGoalText = ""
@@ -16,7 +15,6 @@ struct AppSettings: View {
             
             // Initialize @State variables directly
             _budgetAmountText = State(initialValue: ConvertValue.FloatToCurrency(floatVal: appData.data.budgetAmount))
-            _budgetPeriodText = State(initialValue: ConvertValue.IntToDays(intVal: appData.data.budgetPeriod))
             _selectedCycle = State(initialValue: appData.data.budgetCycle)
             _saveGoalAmountText = State(initialValue: ConvertValue.FloatToCurrency(floatVal: appData.data.saveAmount))
             _saveGoalText = State(initialValue: appData.data.saveGoalText)
@@ -118,7 +116,6 @@ struct AppSettings: View {
         }
         .onDisappear() {
             _ = appData.SetBudgetAmount(stringVal: budgetAmountText)
-            _ = appData.SetBudgetPeriod(stringVal: budgetPeriodText)
             _ = appData.SetSaveGoalText(stringVal: saveGoalText)
             _ = appData.SetSaveGoalAmount(stringVal: saveGoalAmountText)
         }
@@ -130,7 +127,6 @@ struct AppSettings: View {
     
     func ResetApp(){
         budgetAmountText = ""
-        budgetPeriodText = ""
         saveGoalText = ""
         saveGoalAmountText = ""
         appManager.Reset()
