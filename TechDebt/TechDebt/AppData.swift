@@ -170,8 +170,13 @@ struct AppData : Codable {
     var budgetCycle: BudgetCycle = .monthly
     var budgetStartDate: Date = Date()
     var yearlyEarnings: Float = 0.0
+    
+    // Amount you have in the budget calculated from yearly earnings/budget period
     var budgetAmount: Float = 0.0
+    
     var budgetRemaining: Float = 0.0
+    
+    // Budget cycle in days
     var budgetPeriod: Int = 0
     var saveAmount: Float = 0.0
     var saveGoalText: String = ""

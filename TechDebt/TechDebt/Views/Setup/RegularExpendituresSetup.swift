@@ -113,7 +113,6 @@ struct ExpenseListBoxView: View {
                             .listRowInsets(EdgeInsets())
                             .background(Color(UIColor.systemGray6))
                     }
-                    // removeRegularExpenditure should be a method in AppDataManager
                     .onDelete(perform: appData.removeRegularExpenditure)
                     .listRowSeparator(.hidden)
                 }

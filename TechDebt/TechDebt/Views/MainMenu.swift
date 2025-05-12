@@ -7,6 +7,7 @@ struct MainMenu: View {
     var body: some View {
         ZStack{
             Text("Welcome...")
+        
         }
     }
 }
