@@ -112,7 +112,7 @@ struct AppSettings: View {
             budgetAmountText = ConvertValue.FloatToCurrency(floatVal: appData.data.budgetAmount)
             budgetPeriodText = ConvertValue.IntToDays(intVal: appData.data.budgetPeriod)
             saveGoalText = appData.data.saveGoalText
-            saveGoalAmountText = ConvertValue.FloatToCurrency(floatVal: appData.data.saveAmount)
+            saveGoalAmountText = ConvertValue.FloatToCurrency(floatVal: appData.data.saveGoalAmount)
         }
         .onDisappear() {
             _ = appData.SetBudgetAmount(stringVal: budgetAmountText)
