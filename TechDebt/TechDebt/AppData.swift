@@ -93,15 +93,18 @@ final class AppDataManager: ObservableObject {
             data.budgetCycle = cycle
             data.budgetPeriod = cycle.days
             recalculateBudgetAmountPerPeriod()
+            Save()
         }
 
         func setBudgetStartDate(_ date: Date) {
             data.budgetStartDate = date
+            Save()
         }
 
         func setYearlyEarnings(stringVal: String) {
             data.yearlyEarnings = ConvertValue.CurrencyToFloat(stringVal: stringVal)
             recalculateBudgetAmountPerPeriod()
+            Save()
         }
 
         func getYearlyEarningsString() -> String {

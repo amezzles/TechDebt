@@ -6,13 +6,11 @@ final class AppManager: ObservableObject {
     static let instance = AppManager()
     var appData: AppDataManager = AppDataManager.instance
 
-        @Published var menuState: MenuState
+    @Published var menuState: MenuState = .mainMenu
 
         private init() {
             if !self.appData.data.hasSet {
-                self.menuState = .getStarted
-            } else {
-                self.menuState = .mainMenu
+                self.menuState = .settings
             }
         }
 
