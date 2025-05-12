@@ -15,13 +15,13 @@ struct ContentView: View {
         {
         case .mainMenu: MainMenu(appManager: manager, appData: manager.appData)
         case .getStarted: GetStarted(appManager: manager, appData: manager.appData)
-        case .sBudgetAmount: SetBudgetAmountSetup(appManager: manager, appData: manager.appData)
-        case .sBudgetPeriod: SetBudgetPeriodSetup(appManager: manager, appData: manager.appData)
+        case .sBudgetDetails: BudgetSetupDetailsView(appManager: manager, appData: manager.appData)
         case .sRegularExpenditure: RegularExpendituresSetup(appManager: manager, appData: manager.appData)
         case .sSavingGoal: SavingsGoalSetup(appManager: manager, appData: manager.appData)
         case .settings: AppSettings(appManager: manager, appData: manager.appData)
         case .regularExpenditure: RegularExpenditure(appManager: manager, appData: manager.appData)
         case .transactionHistory: TransactionHistory(appManager: manager, appData: manager.appData)
+        case .addTransaction: AddTransaction(appManager: manager, appData: manager.appData)
         }
     }
 }

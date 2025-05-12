@@ -1,5 +1,50 @@
 import SwiftUI
 
+enum ExpenseRecurrence: String, CaseIterable, Identifiable {
+    case daily = "Daily"
+    case weekly = "Weekly"
+    case biWeekly = "Bi-Weekly"
+    case monthly = "Monthly"
+    case quarterly = "Quarterly"
+    case yearly = "Yearly"
+
+    var id: String { self.rawValue }
+
+    var days: Int {
+        switch self {
+        case .daily:
+            return 1
+        case .weekly:
+            return 7
+        case .biWeekly:
+            return 14
+        case .monthly:
+            return 30
+        case .quarterly:
+            return 90
+
+        case .yearly:
+            return 365
+        }
+    }
+}
+
+enum BudgetCycle: String, Codable, CaseIterable, Identifiable {
+    case weekly = "Weekly"
+    case biWeekly = "Bi-Weekly"
+    case monthly = "Monthly"
+
+    var id: String { self.rawValue }
+
+    var days: Int {
+        switch self {
+        case .weekly: return 7
+        case .biWeekly: return 14
+        case .monthly: return 30
+        }
+    }
+}
+
 final class AppDataManager: ObservableObject {
     static let instance = AppDataManager()
     public init() { Load() }
@@ -35,6 +80,18 @@ final class AppDataManager: ObservableObject {
         return ConvertValue.FloatToCurrency(floatVal: data.budgetAmount)
     }
     
+    func SetBudgetRemaining(stringVal: String) -> String {
+        data.budgetRemaining = ConvertValue.CurrencyToFloat(stringVal: stringVal)
+        Save()
+        return ConvertValue.FloatToCurrency(floatVal: data.budgetRemaining)
+    }
+    
+    func SetBudgetRemainingAfterTransaction(stringVal: String) -> String {
+        data.budgetRemaining -= ConvertValue.CurrencyToFloat(stringVal: stringVal)
+        Save()
+        return ConvertValue.FloatToCurrency(floatVal: data.budgetRemaining)
+    }
+    
     func SetBudgetPeriod(stringVal: String) -> String {
         let budgetPeriod = ConvertValue.DaysToInt(stringVal: stringVal)
         if budgetPeriod <= 0 {
@@ -57,9 +114,62 @@ final class AppDataManager: ObservableObject {
         return data.saveGoalText
     }
     
+    func setBudgetName(_ name: String) {
+            data.budgetName = name
+        }
+
+    func setBudgetCycle(_ cycle: BudgetCycle) {
+        data.budgetCycle = cycle
+        data.budgetPeriod = cycle.days
+        recalculateBudgetAmountPerPeriod()
+    }
+
+    func setBudgetStartDate(_ date: Date) {
+        data.budgetStartDate = date
+    }
+
+    func setYearlyEarnings(stringVal: String) {
+        data.yearlyEarnings = ConvertValue.CurrencyToFloat(stringVal: stringVal)
+        recalculateBudgetAmountPerPeriod()
+    }
+
+    func getYearlyEarningsString() -> String {
+        return ConvertValue.FloatToCurrency(floatVal: data.yearlyEarnings)
+    }
+    
+    func finalizeBudgetDetails() {
+        recalculateBudgetAmountPerPeriod()
+    }
+    
+    private func recalculateBudgetAmountPerPeriod() {
+        guard data.yearlyEarnings > 0 else {
+            data.budgetAmount = 0
+            return
+        }
+
+        let periodsInYear: Float
+        switch data.budgetCycle {
+        case .weekly:
+            periodsInYear = 365.25 / 7.0
+        case .biWeekly:
+            periodsInYear = 365.25 / 14.0
+        case .monthly:
+            periodsInYear = 12.0
+        }
+        data.budgetAmount = data.yearlyEarnings / periodsInYear
+    }
+
+    func removeRegularExpenditure(at offsets: IndexSet) {
+        data.regularExpenditures.remove(atOffsets: offsets)
+        Save()
+    }
 }
 
 struct AppData : Codable {
+    var budgetName: String = ""
+    var budgetCycle: BudgetCycle = .monthly
+    var budgetStartDate: Date = Date()
+    var yearlyEarnings: Float = 0.0
     var budgetAmount: Float = 0.0
     var budgetRemaining: Float = 0.0
     var budgetPeriod: Int = 0
@@ -69,13 +179,26 @@ struct AppData : Codable {
     var hasSet = false
 }
 
-struct ExpenditureItem: Codable {
+struct ExpenditureItem: Codable, Identifiable {
+    var id = UUID()
     var expenditureName: String = ""
     var expenditureAmount: Float = 0.0
     var expenditurePeriod: Int = 0
     var expenditureAmountPerBudgetPeriod: Float = 0.0
-    
+
     mutating func SetExpenditureForBudget(period: Int) {
-        expenditureAmountPerBudgetPeriod = (expenditureAmount / Float(expenditurePeriod)) * Float(period)
+        if expenditurePeriod > 0 {
+            expenditureAmountPerBudgetPeriod = (expenditureAmount / Float(expenditurePeriod)) * Float(period)
+        } else {
+            expenditureAmountPerBudgetPeriod = 0
+        }
+    }
+
+    init(id: UUID = UUID(), expenditureName: String = "", expenditureAmount: Float = 0.0, expenditurePeriod: Int = 0, expenditureAmountPerBudgetPeriod: Float = 0.0) {
+        self.id = id
+        self.expenditureName = expenditureName
+        self.expenditureAmount = expenditureAmount
+        self.expenditurePeriod = expenditurePeriod
+        self.expenditureAmountPerBudgetPeriod = expenditureAmountPerBudgetPeriod
     }
 }
