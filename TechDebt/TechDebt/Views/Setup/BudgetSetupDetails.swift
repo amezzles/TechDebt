@@ -1,10 +1,3 @@
-//
-//  BudgetSetupDetails.swift
-//  TechDebt
-//
-//  Created by Amy Roche on 11/5/2025.
-//
-
 import SwiftUI
 
 struct BudgetSetupDetailsView: View {
