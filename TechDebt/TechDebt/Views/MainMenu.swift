@@ -44,7 +44,7 @@ struct MainMenu: View {
                 }
               }
             }
-            ProgressView(value: appData.data.currentSaveAmount, total: appData.data.saveAmount) {
+            ProgressView(value: appData.data.currentSaveAmount, total: appData.data.saveGoalAmount) {
                 Text("Save goal progress")
             }
             .padding()
