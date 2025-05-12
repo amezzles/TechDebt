@@ -103,9 +103,9 @@ final class AppDataManager: ObservableObject {
     }
     
     func SetSaveGoalAmount(stringVal: String) -> String {
-        data.saveAmount = ConvertValue.CurrencyToFloat(stringVal: stringVal)
+        data.saveGoalAmount = ConvertValue.CurrencyToFloat(stringVal: stringVal)
         Save()
-        return ConvertValue.FloatToCurrency(floatVal: data.saveAmount)
+        return ConvertValue.FloatToCurrency(floatVal: data.saveGoalAmount)
     }
     
     func SetSaveGoalText(stringVal: String) -> String {
@@ -178,8 +178,9 @@ struct AppData : Codable {
     
     // Budget cycle in days
     var budgetPeriod: Int = 0
-    var saveAmount: Float = 0.0
+    var saveGoalAmount: Float = 0.0
     var saveGoalText: String = ""
+    var currentSaveAmount: Float = 0.0
     var regularExpenditures: [ExpenditureItem] = []
     var hasSet = false
 }
