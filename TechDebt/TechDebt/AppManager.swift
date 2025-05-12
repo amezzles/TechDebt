@@ -42,7 +42,7 @@ final class AppManager: ObservableObject {
         }
         appData.data.budgetRemaining -= regularExpenditureTotal
         
-        if let nextTurnover = Calendar.current.date(byAdding: .minute, value: appData.data.budgetPeriod, to: appData.data.budgetStartDate) {
+        if let nextTurnover = Calendar.current.date(byAdding: .day, value: appData.data.budgetPeriod, to: appData.data.budgetStartDate) {
             let interval = nextTurnover.timeIntervalSinceNow
             if interval > 0 {
                 budgetTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { _ in
