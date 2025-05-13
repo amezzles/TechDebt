@@ -88,6 +88,10 @@ struct MainMenu: View {
                     }
                   }
                 }
+                Text("Budget Remaining: \(ConvertValue.FloatToCurrency(floatVal: appData.data.budgetRemaining))")
+                                   .font(StaticAppFonts.title3)
+                                   .foregroundColor(StaticAppColors.primaryAccent)
+                                   .padding(.top, -10)
             } else {
                 Text("No budget data to display or budget is zero.")
                     .font(StaticAppFonts.body)
