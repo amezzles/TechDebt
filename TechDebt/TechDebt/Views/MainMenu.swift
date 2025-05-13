@@ -7,13 +7,39 @@ struct MainMenu: View {
 
     private var chartValues: [Slice] {
         var tempChart: [Slice] = []
-        var previous: Float = 0
+        var cumulativeAmount: Float = 0
+
+        // Regular Expenditures
         for item in appData.data.regularExpenditures {
-            tempChart.append(Slice(name: item.expenditureName, previous: previous, next: previous + item.expenditureAmountPerBudgetPeriod))
-            previous += item.expenditureAmountPerBudgetPeriod
+            let amount = max(0, item.expenditureAmountPerBudgetPeriod)
+            if amount > 0 {
+                tempChart.append(Slice(name: item.expenditureName, previous: cumulativeAmount, next: cumulativeAmount + amount))
+                cumulativeAmount += amount
+            }
         }
-        tempChart.append(Slice(name: "Budget Remaining", previous: previous, next: previous + appData.data.budgetRemaining))
-        tempChart.append(Slice(name: "Transactions", previous: previous, next: appData.data.budgetAmount - appData.data.budgetRemaining))
+
+        // Other Spending
+        let totalBudget = max(0, appData.data.budgetAmount)
+        let remainingClamped = appData.data.budgetRemaining
+        let totalSpent = totalBudget - remainingClamped
+        let sumOfRegularExpenses = tempChart.reduce(0) { $0 + ($1.next - $1.previous) }
+        
+        let otherSpending = max(0, totalSpent - sumOfRegularExpenses)
+
+        if otherSpending > 0 {
+            tempChart.append(Slice(name: "Other Transactions", previous: cumulativeAmount, next: cumulativeAmount + otherSpending))
+            cumulativeAmount += otherSpending
+        }
+
+        // Budget Remaining
+        let remainingForChart = max(0, appData.data.budgetRemaining)
+        if remainingForChart > 0 {
+             let finalNext = min(totalBudget, cumulativeAmount + remainingForChart)
+             if finalNext > cumulativeAmount {
+                 tempChart.append(Slice(name: "Budget Remaining", previous: cumulativeAmount, next: finalNext))
+             }
+        }
+
         return tempChart
     }
 

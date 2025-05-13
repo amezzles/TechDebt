@@ -34,6 +34,7 @@ struct SavingsGoalSetup: View {
                 Button(action: {
                     saveSavingsGoal()
                     print("Savings Goal Saved. Navigate next.")
+                    appManager.menuState = .mainMenu
                 }) {
                     Text("Finish Setup")
                         .font(.system(size: 20, weight: .bold))
@@ -71,6 +72,9 @@ struct SavingsGoalSetup: View {
     private func saveSavingsGoal() {
         _ = appData.SetSaveGoalText(stringVal: goalName)
         _ = appData.SetSaveGoalAmount(stringVal: goalAmountString)
+
+        appData.data.hasSet = true
+        appData.Save()
     }
 
      private func hideKeyboard() {
