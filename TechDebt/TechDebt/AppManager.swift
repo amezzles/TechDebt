@@ -6,18 +6,49 @@ final class AppManager: ObservableObject {
     static let instance = AppManager()
     var appData: AppDataManager = AppDataManager.instance
 
-        @Published var menuState: MenuState
+    @Published var menuState: MenuState = .mainMenu
 
-        private init() {
-            if !self.appData.data.hasSet {
-                self.menuState = .getStarted
+    private init() {
+        if !self.appData.data.hasSet {
+            self.menuState = .addTransaction
+        }
+    }
+
+    func Reset(){
+        appData.Reset()
+        menuState = .getStarted
+    }
+    
+    
+    var budgetTimer: Timer?
+    func BeginBudget() {
+        if let firstTurnover = Calendar.current.date(byAdding: .day, value: appData.data.budgetPeriod, to: appData.data.budgetStartDate) {
+            let interval = firstTurnover.timeIntervalSinceNow
+            if interval > 0 {
+                budgetTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { _ in
+                    self.TurnoverBudget()
+                }
             } else {
-                self.menuState = .mainMenu
+                // Handle case where the date is in the past (e.g., schedule immediately or skip)
             }
         }
-
-        func Reset(){
-            appData.Reset()
-            menuState = .getStarted
+    }
+    
+    func TurnoverBudget() {
+        appData.data.budgetRemaining = appData.data.budgetAmount
+        var regularExpenditureTotal: Float = 0
+        for expItem in appData.data.regularExpenditures {
+            regularExpenditureTotal += expItem.expenditureAmountPerBudgetPeriod
         }
+        appData.data.budgetRemaining -= regularExpenditureTotal
+        
+        if let nextTurnover = Calendar.current.date(byAdding: .day, value: appData.data.budgetPeriod, to: appData.data.budgetStartDate) {
+            let interval = nextTurnover.timeIntervalSinceNow
+            if interval > 0 {
+                budgetTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { _ in
+                    self.TurnoverBudget()
+                }
+            }
+        }
+    }
 }

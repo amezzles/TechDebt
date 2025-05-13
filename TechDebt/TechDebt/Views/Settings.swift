@@ -5,13 +5,25 @@ struct AppSettings: View {
     @ObservedObject var appData: AppDataManager
     
     @State private var budgetAmountText = ""
-    @State private var budgetPeriodText = ""
+    @State private var selectedCycle: BudgetCycle = .weekly
     @State private var saveGoalAmountText = ""
     @State private var saveGoalText = ""
+    
+    init(appManager: AppManager, appData: AppDataManager) {
+            self.appManager = appManager
+            self.appData = appData
+            
+            // Initialize @State variables directly
+            _budgetAmountText = State(initialValue: ConvertValue.FloatToCurrency(floatVal: appData.data.budgetAmount))
+            _selectedCycle = State(initialValue: appData.data.budgetCycle)
+            _saveGoalAmountText = State(initialValue: ConvertValue.FloatToCurrency(floatVal: appData.data.saveGoalAmount))
+            _saveGoalText = State(initialValue: appData.data.saveGoalText)
+        }
     
     var body: some View {
         ZStack{
             VStack {
+                Text("\(appData.data.budgetPeriod)")
                 HStack{
                     Button(action: CloseSettings) {
                         Text("Close")
@@ -47,21 +59,15 @@ struct AppSettings: View {
                     }
                     
                     VStack {
-                        HStack {
-                            Text("Budget Period")
-                                .font(.system(size: 24))
-                                .fontWeight(.bold)
-                                .padding(.leading, 30.0)
-                            Spacer()
-                        }
-                        .padding(.top, 6.0)
-                        TextField("How often?", text: $budgetPeriodText)
-                            .font(.system(size: 24))
-                            .padding(.leading, 30.0)
-                            .keyboardType(.decimalPad)
-                            .onSubmit {
-                                budgetPeriodText = appData.SetBudgetPeriod(stringVal: budgetPeriodText)
+                        Picker("Budget Period:", selection: $selectedCycle) {
+                            ForEach(BudgetCycle.allCases) { cycle in
+                                Text(cycle.rawValue).tag(cycle)
                             }
+                        }
+                        .font(.headline)
+                        .onChange(of: selectedCycle) { newValue in
+                            appData.setBudgetCycle(newValue)
+                        }
                     }
                     
                     VStack {
@@ -108,15 +114,8 @@ struct AppSettings: View {
                 
             }
         }
-        .onAppear() {
-            budgetAmountText = ConvertValue.FloatToCurrency(floatVal: appData.data.budgetAmount)
-            budgetPeriodText = ConvertValue.IntToDays(intVal: appData.data.budgetPeriod)
-            saveGoalText = appData.data.saveGoalText
-            saveGoalAmountText = ConvertValue.FloatToCurrency(floatVal: appData.data.saveGoalAmount)
-        }
         .onDisappear() {
             _ = appData.SetBudgetAmount(stringVal: budgetAmountText)
-            _ = appData.SetBudgetPeriod(stringVal: budgetPeriodText)
             _ = appData.SetSaveGoalText(stringVal: saveGoalText)
             _ = appData.SetSaveGoalAmount(stringVal: saveGoalAmountText)
         }
@@ -128,7 +127,6 @@ struct AppSettings: View {
     
     func ResetApp(){
         budgetAmountText = ""
-        budgetPeriodText = ""
         saveGoalText = ""
         saveGoalAmountText = ""
         appManager.Reset()
