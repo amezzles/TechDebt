@@ -3,7 +3,6 @@ import SwiftUI
 struct AddTransaction: View {
     @ObservedObject var appManager: AppManager
     @ObservedObject var appData: AppDataManager
-    // REMOVED: @Environment(\.appTheme) var theme
 
     @State private var amount: String = ""
 
@@ -27,56 +26,62 @@ struct AddTransaction: View {
      }
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            // Use static background color
+        ZStack(alignment: .topTrailing) {
             StaticAppColors.primaryBackground.ignoresSafeArea()
 
-            VStack(spacing: 40) {
-                Spacer().frame(height: 60)
-
+            VStack(alignment: .center, spacing: StaticStyleConstants.standardPadding * 2) {
+                
                 Text("New Transaction")
-                    .font(StaticAppFonts.largeTitle) // Use static font
-                    .foregroundColor(StaticAppColors.primaryText) // Use static color
+                    .font(StaticAppFonts.largeTitle.weight(.bold))
+                    .foregroundColor(StaticAppColors.primaryText)
+                    .padding(.top, StaticStyleConstants.standardPadding * 2)
+                
+                Spacer()
 
                 HStack(alignment: .firstTextBaseline, spacing: 2) {
                     Text("$")
-                        .font(StaticAppFonts.largeTitle)
+                        .font(StaticAppFonts.largeTitle.weight(.bold))
                         .foregroundColor(StaticAppColors.primaryText)
 
                     TextField("0.00", text: $amount)
                         .keyboardType(.decimalPad)
-                        .font(StaticAppFonts.largeTitle)
+                        .font(StaticAppFonts.largeTitle.weight(.bold))
                         .foregroundColor(StaticAppColors.primaryText)
-                        .multilineTextAlignment(.leading)
-                        // .frame(width: 120) // Optional: Uncomment if needed
+                        .multilineTextAlignment(.center)
+                        .frame(minWidth: 100, idealWidth: 150, maxWidth: 200)
+                        .padding(StaticStyleConstants.standardPadding / 2)
+                        .background(StaticAppColors.secondaryBackground)
+                        .cornerRadius(StaticStyleConstants.cornerRadius / 2)
                 }
+                .padding(.horizontal, StaticStyleConstants.standardPadding)
 
-                Button(action: {
-                    print("Button tapped")
-                    saveTransaction()
-                }) {
-                    // Apply the static style to the Text label
-                    Text("Save")
-                        .staticPrimaryButtonStyle(isEnabled: isFormValid) // Apply static style
-                }
-                // REMOVED: .buttonStyle(PrimaryButtonStyle())
-                .padding(.horizontal, 50) // Keep padding for placement
-                .disabled(!isFormValid) // Keep standard disable modifier
 
                 Spacer()
-            }
-            .padding(.top, 20)
+                Spacer()
 
-            // Top-left Close button
+
+                Button(action: {
+                    saveTransaction()
+                }) {
+                    Text("Save Transaction")
+                        .staticPrimaryButtonStyle(isEnabled: isFormValid)
+                }
+                .padding(.horizontal, StaticStyleConstants.standardPadding * 2.5)
+                .disabled(!isFormValid)
+                
+                Spacer()
+            }
+            .frame(maxWidth: .infinity)
+
+
             Button(action: CloseSettings) {
-                Text("Close")
-                    .font(StaticAppFonts.body) // Use static font
-                    .foregroundColor(StaticAppColors.primaryAccent) // Use static color directly
+                Image(systemName: "xmark.circle.fill")
+                    .font(StaticAppFonts.title2.weight(.semibold))
+                    .foregroundColor(StaticAppColors.secondaryText)
                     .padding()
             }
-            // REMOVED: .tint(theme.colors.primaryAccent)
-            .padding(.leading, 5)
-
+            .padding(.trailing, StaticStyleConstants.standardPadding / 2 )
+            .padding(.top, StaticStyleConstants.standardPadding / 2)
         }
         .onTapGesture {
            hideKeyboard()
@@ -89,7 +94,6 @@ struct AddTransaction: View {
 struct AddTransaction_Previews: PreviewProvider {
     static var previews: some View {
         AddTransaction(appManager: AppManager.instance, appData: AppDataManager.instance)
-        // No theme injection needed
     }
 }
 #endif

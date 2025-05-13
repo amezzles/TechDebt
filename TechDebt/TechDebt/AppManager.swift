@@ -10,7 +10,9 @@ final class AppManager: ObservableObject {
 
     private init() {
         if !self.appData.data.hasSet {
-            self.menuState = .addTransaction
+            self.menuState = .getStarted
+        } else {
+            self.menuState = .mainMenu
         }
     }
 
