@@ -74,6 +74,8 @@ final class AppDataManager: ObservableObject {
         Save()
     }
     
+    // Budget Setup
+    
     func SetBudgetAmount(stringVal: String) -> String {
         data.budgetAmount = ConvertValue.CurrencyToFloat(stringVal: stringVal)
         Save()
@@ -102,6 +104,8 @@ final class AppDataManager: ObservableObject {
         return ConvertValue.IntToDays(intVal: data.budgetPeriod)
     }
     
+    // Savings Goal Setup
+    
     func SetSaveGoalAmount(stringVal: String) -> String {
         data.saveGoalAmount = ConvertValue.CurrencyToFloat(stringVal: stringVal)
         Save()
@@ -115,22 +119,26 @@ final class AppDataManager: ObservableObject {
     }
     
     func setBudgetName(_ name: String) {
-            data.budgetName = name
-        }
+        data.budgetName = name
+        Save()
+    }
 
     func setBudgetCycle(_ cycle: BudgetCycle) {
         data.budgetCycle = cycle
         data.budgetPeriod = cycle.days
         recalculateBudgetAmountPerPeriod()
+        Save()
     }
 
     func setBudgetStartDate(_ date: Date) {
         data.budgetStartDate = date
+        Save()
     }
 
     func setYearlyEarnings(stringVal: String) {
         data.yearlyEarnings = ConvertValue.CurrencyToFloat(stringVal: stringVal)
         recalculateBudgetAmountPerPeriod()
+        Save()
     }
 
     func getYearlyEarningsString() -> String {
@@ -157,6 +165,15 @@ final class AppDataManager: ObservableObject {
             periodsInYear = 12.0
         }
         data.budgetAmount = data.yearlyEarnings / periodsInYear
+    }
+    
+    // Regular Expenditures
+    
+    func addRegularExpenditure(_ item: ExpenditureItem) {
+        var newItem = item
+        newItem.SetExpenditureForBudget(period: data.budgetPeriod)
+        data.regularExpenditures.append(newItem)
+        Save()
     }
 
     func removeRegularExpenditure(at offsets: IndexSet) {

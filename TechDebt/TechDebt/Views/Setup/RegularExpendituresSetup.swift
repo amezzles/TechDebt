@@ -11,10 +11,8 @@ struct RegularExpendituresSetup: View {
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
+            
             SetupHeaderView()
-
-            AddExpenseButtonView(isPresentingAddExpenseSheet: $isPresentingAddExpenseSheet)
-
             ExpenseListBoxView(appData: appData)
 
             HStack {
@@ -26,6 +24,9 @@ struct RegularExpendituresSetup: View {
                     .fontWeight(.bold)
             }
             .padding()
+            .padding()
+            
+            AddExpenseButtonView(isPresentingAddExpenseSheet: $isPresentingAddExpenseSheet)
             Spacer()
             Button(action: {
                 appManager.menuState = .sSavingGoal
@@ -63,12 +64,13 @@ struct SetupHeaderView: View {
                 .fontWeight(.heavy)
                 .foregroundColor(Color("#0040A8"))
                 .padding(.top, 40)
-
+                .padding(.bottom, 50)
+            
             Text("REGULAR EXPENSES")
                 .font(.custom("Kaph-Regular copy", size: 24))
                 .fontWeight(.bold)
                 .foregroundColor(Color("#0040A8"))
-                .padding(.bottom, 25)
+                .padding(.bottom, 20)
         }
     }
 }

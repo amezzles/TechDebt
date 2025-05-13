@@ -19,7 +19,6 @@ struct ContentView: View {
         case .sRegularExpenditure: RegularExpendituresSetup(appManager: manager, appData: manager.appData)
         case .sSavingGoal: SavingsGoalSetup(appManager: manager, appData: manager.appData)
         case .settings: AppSettings(appManager: manager, appData: manager.appData)
-        case .regularExpenditure: RegularExpenditure(appManager: manager, appData: manager.appData)
         case .transactionHistory: TransactionHistory(appManager: manager, appData: manager.appData)
         case .addTransaction: AddTransaction(appManager: manager, appData: manager.appData)
         }

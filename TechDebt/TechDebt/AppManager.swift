@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum MenuState { case getStarted, sBudgetDetails, sRegularExpenditure, sSavingGoal, mainMenu, settings, regularExpenditure, transactionHistory, addTransaction}
+enum MenuState { case getStarted, sBudgetDetails, sRegularExpenditure, sSavingGoal, mainMenu, settings, transactionHistory, addTransaction}
 
 final class AppManager: ObservableObject {
     static let instance = AppManager()
