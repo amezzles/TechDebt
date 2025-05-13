@@ -157,19 +157,6 @@ struct MainMenu: View {
                     .frame(minWidth: 60)
                 }
                 Spacer()
-                Button(action: {
-                    appManager.menuState = .transactionHistory
-                }) {
-                    VStack(spacing: 4) {
-                        Image(systemName: "list.bullet")
-                             .font(StaticAppFonts.title2)
-                        Text("History")
-                             .font(StaticAppFonts.caption)
-                    }
-                    .foregroundColor(StaticAppColors.primaryAccent)
-                    .frame(minWidth: 60)
-                }
-                Spacer()
             }
             .padding(.vertical, StaticStyleConstants.standardPadding)
             .padding(.horizontal, StaticStyleConstants.standardPadding / 2)
