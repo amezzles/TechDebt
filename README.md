@@ -1,4 +1,4 @@
-# TechDebt
+# Budgie
 Budgie is a user-friendly budget making app targeted to those who want to start tracking their budget easily and effortlessly. What makes Budgie different from other budget tracking apps is how it is tailored more towards having a saving goal in mind. This way there’s an easy way to keep track of the amount of money you have, spend, and how much more money you need to save towards your goal. 
 
 Features
