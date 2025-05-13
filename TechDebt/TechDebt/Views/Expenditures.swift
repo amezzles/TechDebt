@@ -2,61 +2,41 @@
 //  Expenditures.swift
 //  TechDebt
 //
-//  Created by Julian Ignacio Macaraig Alcazaren on 5/9/25.
-//
-
 import SwiftUI
 
 struct AddTransaction: View {
     @ObservedObject var appManager: AppManager
     @ObservedObject var appData: AppDataManager
-    
-    @State private var amount: String = "0.00"
-    @State private var category: String = ""
-//    @State private var isFormValid: Bool = ni
-    
-    var isFormValid: Bool {
-        !amount.isEmpty && !category.isEmpty && Float(amount) != nil
-    }
-    
-    private func saveTransaction() {
-    
-        _ = appData.SetBudgetRemainingAfterTransaction(stringVal: amount)
 
-        amount = ""
-        category = ""
+    @State private var amount: String = ""
+
+    var isFormValid: Bool {
+        if let val = Float(amount), val > 0 {
+            return true
+        }
+        return false
     }
-    
-    func CloseSettings(){
+
+    private func saveTransaction() {
+        _ = appData.SetBudgetRemainingAfterTransaction(stringVal: amount)
+        amount = ""
+    }
+
+    func CloseSettings() {
         appManager.menuState = .mainMenu
     }
 
     var body: some View {
-        ZStack{
+        ZStack(alignment: .topLeading) {
             Color.white.ignoresSafeArea()
-            VStack(spacing: 50) {
-                
-                Button(action: CloseSettings) {
-                    Text("Close")
-                        .font(.system(size: 24))
-                        .padding(.top, 10.0)
-                        .padding(.leading, 30.0)
-                }
-                
-//                VStack {
-//                    Text("Budget Remaining")
-//                        .font(.system(size: 20, weight: .medium))
-//                        .foregroundColor(.gray)
-//                    Text(String(format: "$%.2f", appData.data.budgetRemaining))
-//                        .font(.system(size: 32, weight: .bold))
-//                        .foregroundColor(.black)
-//                }
-                
+
+            VStack(spacing: 40) {
+                Spacer().frame(height: 60) // Space below the close button
+
                 Text("New Transaction")
-                    .font(.system(size: 40, weight: .bold) )
-                    .fontWeight(.bold)
+                    .font(.system(size: 40, weight: .bold))
                     .foregroundColor(.black)
-                
+
                 HStack(alignment: .firstTextBaseline, spacing: 2) {
                     Text("$")
                         .font(.system(size: 40, weight: .bold))
@@ -64,20 +44,8 @@ struct AddTransaction: View {
                         .keyboardType(.decimalPad)
                         .font(.system(size: 40, weight: .bold))
                         .multilineTextAlignment(.leading)
-                        .frame(width: 100)
+                        .frame(width: 120)
                 }
-
-                
-                HStack(spacing: 20) {
-                    Text("Category")
-                        .font(.system(size: 25, weight: .semibold))
-                    TextField("", text: $category)
-                        .padding(10)
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(5)
-                        .frame(width: 160)
-                }
-
 
                 Button(action: {
                     print("Button tapped")
@@ -92,11 +60,25 @@ struct AddTransaction: View {
                         .cornerRadius(20)
                         .padding(.horizontal, 50)
                 }
-                .disabled(!isFormValid) // disables the button when form is invalid
+                .disabled(!isFormValid)
                 
-               
+                Spacer()
+            }
+            .padding(.top, 20)
+
+            // Top-left Close button
+            Button(action: CloseSettings) {
+                Text("Close")
+                    .font(.system(size: 18))
+                    .padding()
             }
         }
     }
-    
 }
+
+
+//#Preview {
+ //AddTransaction(appManager: AppManager(), appData: AppDataManager())
+//}
+
+
