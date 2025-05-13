@@ -10,6 +10,9 @@ struct AppSettings: View {
     @State private var budgetStartDate: Date
     @State private var saveGoalAmountText: String = ""
     @State private var saveGoalText: String = ""
+    @State private var newExpenditureName: String = ""
+    @State private var newExpenditureAmount: String = ""
+    @State private var newExpenditureRecurrence: ExpenseRecurrence = .monthly
     
     init(appManager: AppManager, appData: AppDataManager) {
         self.appManager = appManager
@@ -106,7 +109,9 @@ struct AppSettings: View {
                     .listRowBackground(StaticAppColors.secondaryBackground)
                 }
                 .listRowSeparatorTint(StaticAppColors.primaryBackground)
-
+                
+                ExpendituresSection
+                
                 Section {
                     Button(action: ResetApp) {
                         HStack {
@@ -177,6 +182,77 @@ struct AppSettings: View {
 
     private func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    
+    private var ExpendituresSection: some View {
+        return Section(header: Text("Regular Expenditures")
+            .font(StaticAppFonts.headline)
+            .foregroundColor(StaticAppColors.primaryText)) {
+
+            ForEach(appData.data.regularExpenditures) { item in
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(item.expenditureName)
+                            .font(StaticAppFonts.body)
+                            .foregroundColor(StaticAppColors.primaryText)
+                        Text("(\(ConvertValue.IntToDays(intVal: item.expenditurePeriod)))")
+                            .font(StaticAppFonts.caption)
+                            .foregroundColor(StaticAppColors.secondaryText)
+                        }
+                        Spacer()
+                        Text(ConvertValue.FloatToCurrency(floatVal: item.expenditureAmountPerBudgetPeriod))
+                            .font(StaticAppFonts.body)
+                            .foregroundColor(StaticAppColors.secondaryText)
+                    }
+                }
+                .onDelete { offsets in
+                    appData.removeRegularExpenditure(at: offsets)
+            }
+            .listRowBackground(StaticAppColors.secondaryBackground)
+
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    TextField("Expense name", text: $newExpenditureName)
+                        .font(StaticAppFonts.body)
+                        .foregroundColor(StaticAppColors.secondaryText)
+                    
+                    TextField("Amount", text: $newExpenditureAmount)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                        .frame(width: 100)
+                        .font(StaticAppFonts.body)
+                        .foregroundColor(StaticAppColors.secondaryText)
+                }
+                
+                Picker("Recurrence", selection: $newExpenditureRecurrence) {
+                    ForEach(ExpenseRecurrence.allCases) { recurrence in
+                        Text(recurrence.rawValue).tag(recurrence)
+                    }
+                }
+                .pickerStyle(MenuPickerStyle())
+                .font(StaticAppFonts.body)
+                .tint(StaticAppColors.primaryAccent)
+                
+                HStack {
+                    Spacer()
+                    Button("Add Expenditure") {
+                        appData.addRegularExpenditure(ExpenditureItem( expenditureName: newExpenditureName, expenditureAmount: Float(ConvertValue.DaysToInt(stringVal: newExpenditureAmount)), expenditurePeriod: newExpenditureRecurrence.days))
+                        newExpenditureName = ""
+                        newExpenditureAmount = ""
+                        newExpenditureRecurrence = .monthly
+                    }
+                    .listRowBackground(StaticAppColors.secondaryBackground)
+                    .font(StaticAppFonts.body.weight(.semibold))
+                    .foregroundColor(StaticAppColors.primaryAccent)
+                    .disabled(newExpenditureName.isEmpty || Float(newExpenditureAmount) == nil)
+                    .listRowSeparatorTint(StaticAppColors.primaryBackground)
+                    .background(StaticAppColors.secondaryBackground)
+                    Spacer()
+                }
+            }
+            .padding(.top, 8)
+            .listRowBackground(StaticAppColors.secondaryBackground)
+        }
     }
 }
 
