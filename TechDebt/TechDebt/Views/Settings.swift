@@ -16,7 +16,7 @@ struct AppSettings: View {
             // Initialize @State variables directly
             _budgetAmountText = State(initialValue: ConvertValue.FloatToCurrency(floatVal: appData.data.budgetAmount))
             _selectedCycle = State(initialValue: appData.data.budgetCycle)
-            _saveGoalAmountText = State(initialValue: ConvertValue.FloatToCurrency(floatVal: appData.data.saveAmount))
+            _saveGoalAmountText = State(initialValue: ConvertValue.FloatToCurrency(floatVal: appData.data.saveGoalAmount))
             _saveGoalText = State(initialValue: appData.data.saveGoalText)
         }
     
