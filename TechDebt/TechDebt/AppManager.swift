@@ -24,6 +24,18 @@ final class AppManager: ObservableObject {
     
     var budgetTimer: Timer?
     func BeginBudget() {
+        budgetTimer?.invalidate()
+        budgetTimer = nil
+        
+        appData.data.budgetRemaining = appData.data.budgetAmount
+        var regularExpenditureTotal: Float = 0
+        for var expItem in appData.data.regularExpenditures {
+            expItem.SetExpenditureForBudget(period: appData.data.budgetPeriod)
+            regularExpenditureTotal += expItem.expenditureAmountPerBudgetPeriod
+        }
+        appData.data.budgetRemaining -= regularExpenditureTotal
+        
+        
         if let firstTurnover = Calendar.current.date(byAdding: .day, value: appData.data.budgetPeriod, to: appData.data.budgetStartDate) {
             let interval = firstTurnover.timeIntervalSinceNow
             if interval > 0 {
@@ -31,15 +43,22 @@ final class AppManager: ObservableObject {
                     self.TurnoverBudget()
                 }
             } else {
-                // Handle case where the date is in the past (e.g., schedule immediately or skip)
+                budgetTimer = Timer.scheduledTimer(withTimeInterval: Date.now.timeIntervalSinceNow, repeats: false) { _ in
+                    self.TurnoverBudget()
+                }
             }
         }
     }
     
     func TurnoverBudget() {
+        budgetTimer?.invalidate()
+        budgetTimer = nil
+        
+        appData.data.currentSaveAmount += appData.data.budgetRemaining
         appData.data.budgetRemaining = appData.data.budgetAmount
         var regularExpenditureTotal: Float = 0
-        for expItem in appData.data.regularExpenditures {
+        for var expItem in appData.data.regularExpenditures {
+            expItem.SetExpenditureForBudget(period: appData.data.budgetPeriod)
             regularExpenditureTotal += expItem.expenditureAmountPerBudgetPeriod
         }
         appData.data.budgetRemaining -= regularExpenditureTotal
