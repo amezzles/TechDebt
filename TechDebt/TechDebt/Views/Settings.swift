@@ -17,7 +17,7 @@ struct AppSettings: View {
     init(appManager: AppManager, appData: AppDataManager) {
         self.appManager = appManager
         self.appData = appData
-        
+
         _budgetName = State(initialValue: appData.data.budgetName)
         let initialEarnings = appData.data.yearlyEarnings
         _yearlyEarningsString = State(initialValue: initialEarnings == 0 ? "" : ConvertValue.FloatToCurrency(floatVal: initialEarnings))

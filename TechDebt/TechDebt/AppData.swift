@@ -126,7 +126,6 @@ final class AppDataManager: ObservableObject {
     func setBudgetCycle(_ cycle: BudgetCycle) {
         data.budgetCycle = cycle
         data.budgetPeriod = cycle.days
-        AppManager.instance.BeginBudget()
         recalculateBudgetAmountPerPeriod()
         Save()
     }
@@ -134,7 +133,6 @@ final class AppDataManager: ObservableObject {
     func setBudgetStartDate(_ date: Date) {
         data.budgetStartDate = date
         Save()
-        AppManager.instance.BeginBudget()
     }
 
     func setYearlyEarnings(stringVal: String) {

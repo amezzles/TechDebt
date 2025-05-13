@@ -19,6 +19,7 @@ final class AppManager: ObservableObject {
     func Reset(){
         appData.Reset()
         menuState = .getStarted
+        BeginBudget()
     }
     
     

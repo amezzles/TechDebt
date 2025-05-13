@@ -55,6 +55,9 @@ struct SavingsGoalSetup: View {
 
                     Button(action: {
                         saveSavingsGoal()
+                        appData.data.hasSet = true
+                        appData.Save()
+                        appManager.BeginBudget()
                         appManager.menuState = .mainMenu
                     }) {
                         Text("Finish Setup")
