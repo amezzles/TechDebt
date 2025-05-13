@@ -74,6 +74,8 @@ final class AppDataManager: ObservableObject {
         Save()
     }
     
+    // Budget Setup
+    
     func SetBudgetAmount(stringVal: String) -> String {
         data.budgetAmount = ConvertValue.CurrencyToFloat(stringVal: stringVal)
         Save()
@@ -102,10 +104,12 @@ final class AppDataManager: ObservableObject {
         return ConvertValue.IntToDays(intVal: data.budgetPeriod)
     }
     
+    // Savings Goal Setup
+    
     func SetSaveGoalAmount(stringVal: String) -> String {
-        data.saveAmount = ConvertValue.CurrencyToFloat(stringVal: stringVal)
+        data.saveGoalAmount = ConvertValue.CurrencyToFloat(stringVal: stringVal)
         Save()
-        return ConvertValue.FloatToCurrency(floatVal: data.saveAmount)
+        return ConvertValue.FloatToCurrency(floatVal: data.saveGoalAmount)
     }
     
     func SetSaveGoalText(stringVal: String) -> String {
@@ -115,9 +119,9 @@ final class AppDataManager: ObservableObject {
     }
     
     func setBudgetName(_ name: String) {
-            data.budgetName = name
-            Save()
-        }
+        data.budgetName = name
+        Save()
+    }
 
     func setBudgetCycle(_ cycle: BudgetCycle) {
         data.budgetCycle = cycle
@@ -162,6 +166,15 @@ final class AppDataManager: ObservableObject {
         }
         data.budgetAmount = data.yearlyEarnings / periodsInYear
     }
+    
+    // Regular Expenditures
+    
+    func addRegularExpenditure(_ item: ExpenditureItem) {
+        var newItem = item
+        newItem.SetExpenditureForBudget(period: data.budgetPeriod)
+        data.regularExpenditures.append(newItem)
+        Save()
+    }
 
     func removeRegularExpenditure(at offsets: IndexSet) {
         data.regularExpenditures.remove(atOffsets: offsets)
@@ -182,8 +195,9 @@ struct AppData : Codable {
     
     // Budget cycle in days
     var budgetPeriod: Int = 0
-    var saveAmount: Float = 0.0
+    var saveGoalAmount: Float = 0.0
     var saveGoalText: String = ""
+    var currentSaveAmount: Float = 0.0
     var regularExpenditures: [ExpenditureItem] = []
     var hasSet = false
 }
