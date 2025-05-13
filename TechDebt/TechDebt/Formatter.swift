@@ -36,98 +36,63 @@ class ConvertValue {
     }
 }
 
-private struct AppThemeKey: EnvironmentKey {
-    static let defaultValue = AppTheme() // Provide a default theme
+struct StaticAppColors {
+    static let primaryAccent = Color.primaryAccent
+    static let primaryBackground = Color.primaryBackground
+    static let secondaryBackground = Color.secondaryBackground
+    static let primaryText = Color.primaryText
+    static let secondaryText = Color.secondaryText
+    static let accentText = Color.accentText
+    static let error = Color.red
+    static let success = Color.green
+    static let warning = Color.orange
+    static let placeholder = Color.placeholder
+    static let disabledGray = Color.inactive
 }
 
-extension EnvironmentValues {
-    var appTheme: AppTheme {
-        get { self[AppThemeKey.self] }
-        set { self[AppThemeKey.self] = newValue }
-    }
+struct StaticAppFonts {
+    static let largeTitle: Font = .largeTitle
+    static let title1: Font = .title
+    static let title2: Font = .title2
+    static let title3: Font = .title3
+    static let headline: Font = .headline
+    static let body: Font = .body
+    static let callout: Font = .callout
+    static let subheadline: Font = .subheadline
+    static let footnote: Font = .footnote
+    static let caption: Font = .caption
+    static let caption2: Font = .caption2
 }
 
-struct AppColors {
-    let primaryAccent = Color("PrimaryAccent")
-    let primaryBackground = Color("PrimaryBackground")
-    let secondaryBackground = Color("SecondaryBackground")
-
-    // Text colors
-    let primaryText = Color("PrimaryText")
-    let secondaryText = Color("SecondaryText")
-    let accentText = Color("AccentText")
-
-    // Semantic colors
-    let error = Color.red
-    let success = Color.green
-    let warning = Color.orange
+struct StaticStyleConstants {
+    static let cornerRadius: CGFloat = 10
+    static let standardPadding: CGFloat = 16
 }
 
-struct AppFonts {
-    let largeTitle = Font.custom("Kaph-Regular copy", size: 34) // Replace "YourFont-Bold"
-    let title1 = Font.custom("Kaph-Regular copy", size: 28)
-    let title2 = Font.custom("Kaph-Regular copy", size: 22)
-    let headline = Font.custom("Kaph-Regular copy", size: 17)
-    let body = Font.custom("Kaph-Regular copy", size: 17)
-    let callout = Font.custom("Kaph-Regular copy", size: 16)
-    let subheadline = Font.custom("Kaph-Regular copy", size: 15)
-    let footnote = Font.custom("Kaph-Regular copy", size: 13)
-    let caption = Font.custom("Kaph-Regular copy", size: 12)
-}
-
-struct AppTheme {
-    let colors = AppColors()
-    let fonts = AppFonts()
-    let cornerRadius: CGFloat = 10
-    let standardPadding: CGFloat = 16
-}
-
-struct PrimaryButtonStyle: ButtonStyle {
-    @Environment(\.appTheme) var theme
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(theme.fonts.headline)
-            .padding(.vertical, 12)
-            .padding(.horizontal, theme.standardPadding)
-            .frame(maxWidth: .infinity)
-            .foregroundColor(theme.colors.accentText)
-            .background(theme.colors.primaryAccent)
-            .cornerRadius(theme.cornerRadius)
-            .opacity(configuration.isPressed ? 0.8 : 1.0)
-            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
-    }
-}
-
-struct CardBackground: ViewModifier {
-    @Environment(\.appTheme) var theme
-
+struct StaticCardBackground: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .padding(theme.standardPadding)
-            .background(theme.colors.secondaryBackground)
-            .cornerRadius(theme.cornerRadius)
+            .padding(StaticStyleConstants.standardPadding)
+            .background(StaticAppColors.secondaryBackground)
+            .cornerRadius(StaticStyleConstants.cornerRadius)
             .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
     }
 }
 
 extension View {
-    func cardBackgroundStyle() -> some View {
-        self.modifier(CardBackground())
-    }
-}
-
-extension Text {
-    func appFont(_ fontStyle: Font, theme: AppTheme, color: Color? = nil) -> Text {
-         self
-            .font(fontStyle)
-            .foregroundColor(color ?? theme.colors.primaryText)
+    func staticCardStyle() -> some View {
+        self.modifier(StaticCardBackground())
     }
 
-    func headlineStyle(theme: AppTheme) -> Text {
-         self.appFont(theme.fonts.headline, theme: theme, color: theme.colors.primaryText)
-    }
-     func bodyStyle(theme: AppTheme, color: Color? = nil) -> Text {
-         self.appFont(theme.fonts.body, theme: theme, color: color ?? theme.colors.secondaryText)
+    func staticPrimaryButtonStyle(isEnabled: Bool = true) -> some View {
+        self
+            .font(StaticAppFonts.headline)
+            .padding(.vertical, 12)
+            .padding(.horizontal, StaticStyleConstants.standardPadding)
+            .frame(maxWidth: .infinity)
+            .foregroundColor(StaticAppColors.accentText)
+            .background(isEnabled ? StaticAppColors.primaryAccent : StaticAppColors.disabledGray)
+            .cornerRadius(StaticStyleConstants.cornerRadius)
+            .opacity(isEnabled ? 1.0 : 0.7)
     }
 }

@@ -4,131 +4,186 @@ struct AppSettings: View {
     @ObservedObject var appManager: AppManager
     @ObservedObject var appData: AppDataManager
     
-    @State private var budgetAmountText = ""
-    @State private var selectedCycle: BudgetCycle = .weekly
-    @State private var saveGoalAmountText = ""
-    @State private var saveGoalText = ""
+    @State private var budgetName: String = ""
+    @State private var yearlyEarningsString: String = ""
+    @State private var selectedCycle: BudgetCycle
+    @State private var budgetStartDate: Date
+    @State private var saveGoalAmountText: String = ""
+    @State private var saveGoalText: String = ""
     
     init(appManager: AppManager, appData: AppDataManager) {
-            self.appManager = appManager
-            self.appData = appData
-            
-            // Initialize @State variables directly
-            _budgetAmountText = State(initialValue: ConvertValue.FloatToCurrency(floatVal: appData.data.budgetAmount))
-            _selectedCycle = State(initialValue: appData.data.budgetCycle)
-            _saveGoalAmountText = State(initialValue: ConvertValue.FloatToCurrency(floatVal: appData.data.saveGoalAmount))
-            _saveGoalText = State(initialValue: appData.data.saveGoalText)
-        }
+        self.appManager = appManager
+        self.appData = appData
+        
+        _budgetName = State(initialValue: appData.data.budgetName)
+        let initialEarnings = appData.data.yearlyEarnings
+        _yearlyEarningsString = State(initialValue: initialEarnings == 0 ? "" : ConvertValue.FloatToCurrency(floatVal: initialEarnings))
+        _selectedCycle = State(initialValue: appData.data.budgetCycle)
+        _budgetStartDate = State(initialValue: appData.data.budgetStartDate)
+        _saveGoalAmountText = State(initialValue: ConvertValue.FloatToCurrency(floatVal: appData.data.saveGoalAmount))
+        _saveGoalText = State(initialValue: appData.data.saveGoalText)
+    }
     
     var body: some View {
-        ZStack{
-            VStack {
-                Text("\(appData.data.budgetPeriod)")
-                HStack{
-                    Button(action: CloseSettings) {
-                        Text("Close")
-                            .font(.system(size: 24))
-                            .padding(.top, 10.0)
-                            .padding(.leading, 30.0)
+        NavigationView {
+            Form {
+                Section(header: Text("Budget Details").font(StaticAppFonts.headline).foregroundColor(StaticAppColors.primaryText)) {
+                    HStack {
+                        Text("Name:")
+                            .font(StaticAppFonts.body)
+                            .foregroundColor(StaticAppColors.primaryText)
+                        TextField("e.g., My Monthly Budget", text: $budgetName)
+                            .font(StaticAppFonts.body)
+                            .foregroundColor(StaticAppColors.secondaryText)
+                            .onSubmit { appData.setBudgetName(budgetName) }
                     }
-                    Spacer()
-                }
-                Text("Settings")
-                    .font(.system(size: 48))
-                    .fontWeight(Font.Weight.bold)
-                    .multilineTextAlignment(.center)
-                    .padding(.top, 5.0)
-                
-                Form {
-                    VStack {
-                        HStack {
-                            Text("Budget Amount")
-                                .font(.system(size: 24))
-                                .fontWeight(.bold)
-                                .padding(.leading, 30.0)
-                            Spacer()
+                    .listRowBackground(StaticAppColors.secondaryBackground)
+
+                    Picker(selection: $selectedCycle) {
+                        ForEach(BudgetCycle.allCases) { cycle in
+                            Text(cycle.rawValue)
+                                .font(StaticAppFonts.body)
+                                .tag(cycle)
                         }
-                        .padding(.top, 6.0)
-                        TextField("What's your budget?", text: $budgetAmountText)
-                            .font(.system(size: 24))
-                            .padding(.leading, 30.0)
+                    } label: {
+                         Text("Budget Period:")
+                             .font(StaticAppFonts.body)
+                             .foregroundColor(StaticAppColors.primaryText)
+                     }
+                     .tint(StaticAppColors.primaryAccent)
+                     .listRowBackground(StaticAppColors.secondaryBackground)
+                     .onChange(of: selectedCycle) { newValue in
+                        appData.setBudgetCycle(newValue)
+                    }
+
+                    DatePicker(selection: $budgetStartDate, displayedComponents: .date) {
+                         Text("Budget Start Date:")
+                             .font(StaticAppFonts.body)
+                             .foregroundColor(StaticAppColors.primaryText)
+                     }
+                     .tint(StaticAppColors.primaryAccent)
+                     .listRowBackground(StaticAppColors.secondaryBackground)
+                     .onChange(of: budgetStartDate) { newValue in
+                            appData.setBudgetStartDate(newValue)
+                        }
+                    
+                    HStack {
+                        Text("Yearly Earnings:")
+                            .font(StaticAppFonts.body)
+                            .foregroundColor(StaticAppColors.primaryText)
+                        TextField(ConvertValue.FloatToCurrency(floatVal: 0.0), text: $yearlyEarningsString)
+                            .font(StaticAppFonts.body)
+                            .foregroundColor(StaticAppColors.secondaryText)
                             .keyboardType(.decimalPad)
-                            .onSubmit {
-                                budgetAmountText = appData.SetBudgetAmount(stringVal: budgetAmountText)
-                            }
+                            .onSubmit { appData.setYearlyEarnings(stringVal: yearlyEarningsString) }
                     }
-                    
-                    VStack {
-                        Picker("Budget Period:", selection: $selectedCycle) {
-                            ForEach(BudgetCycle.allCases) { cycle in
-                                Text(cycle.rawValue).tag(cycle)
-                            }
-                        }
-                        .font(.headline)
-                        .onChange(of: selectedCycle) { newValue in
-                            appData.setBudgetCycle(newValue)
-                        }
-                    }
-                    
-                    VStack {
-                        HStack {
-                            Text("Savings Goal")
-                                .font(.system(size: 24))
-                                .fontWeight(.bold)
-                                .padding(.leading, 30.0)
-                            Spacer()
-                        }
-                        .padding(.top, 6.0)
+                    .listRowBackground(StaticAppColors.secondaryBackground)
+                }
+                .listRowSeparatorTint(StaticAppColors.primaryBackground)
+
+                Section(header: Text("Savings Goal").font(StaticAppFonts.headline).foregroundColor(StaticAppColors.primaryText)) {
+                    HStack {
+                        Text("Goal Name:")
+                            .font(StaticAppFonts.body)
+                            .foregroundColor(StaticAppColors.primaryText)
                         TextField("What are you saving for?", text: $saveGoalText)
-                            .font(.system(size: 24))
-                            .padding(.leading, 30.0)
+                            .font(StaticAppFonts.body)
+                            .foregroundColor(StaticAppColors.secondaryText)
+                            .onSubmit { saveGoalText = appData.SetSaveGoalText(stringVal: saveGoalText) }
+                    }
+                    .listRowBackground(StaticAppColors.secondaryBackground)
+                    
+                    HStack {
+                        Text("Amount Needed:")
+                            .font(StaticAppFonts.body)
+                            .foregroundColor(StaticAppColors.primaryText)
+                        TextField("How much do you need?", text: $saveGoalAmountText)
+                            .font(StaticAppFonts.body)
+                            .foregroundColor(StaticAppColors.secondaryText)
                             .keyboardType(.decimalPad)
-                            .onSubmit {
-                                saveGoalText = appData.SetSaveGoalText(stringVal: saveGoalText)
-                            }
+                            .onSubmit { saveGoalAmountText = appData.SetSaveGoalAmount(stringVal: saveGoalAmountText) }
+                    }
+                    .listRowBackground(StaticAppColors.secondaryBackground)
+                }
+                .listRowSeparatorTint(StaticAppColors.primaryBackground)
+
+                Section {
+                    Button(action: ResetApp) {
                         HStack {
-                            Text("Amount Needed")
-                                .font(.system(size: 24))
-                                .fontWeight(.bold)
-                                .padding(.leading, 30.0)
+                            Spacer()
+                            Text("Reset App Data")
+                                .font(StaticAppFonts.body.weight(.semibold))
+                                .foregroundColor(StaticAppColors.error)
                             Spacer()
                         }
-                        TextField("How much do you need?", text: $saveGoalAmountText)
-                            .font(.system(size: 24))
-                            .padding(.leading, 30.0)
-                            .keyboardType(.decimalPad)
-                            .onSubmit {
-                                saveGoalAmountText = appData.SetSaveGoalAmount(stringVal: saveGoalAmountText)
-                            }
                     }
+                    .listRowBackground(StaticAppColors.secondaryBackground)
                 }
-                
-                Button(action: ResetApp) {
-                    Text("Reset App")
-                        .foregroundStyle(.red)
-                        .font(.system(size: 24))
-                        .fontWeight(.bold)
-                        .padding(.top, 10.0)
+                .listRowSeparatorTint(StaticAppColors.primaryBackground)
+            }
+            .background(StaticAppColors.primaryBackground)
+            .scrollContentBackground(.hidden)
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(StaticAppColors.primaryAccent, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Close") {
+                        CloseSettings()
+                    }
+                    .font(StaticAppFonts.body)
+                    .tint(StaticAppColors.accentText)
                 }
-                Spacer()
-                
             }
         }
+        .accentColor(StaticAppColors.primaryAccent)
         .onDisappear() {
-            _ = appData.SetBudgetAmount(stringVal: budgetAmountText)
-            _ = appData.SetSaveGoalText(stringVal: saveGoalText)
-            _ = appData.SetSaveGoalAmount(stringVal: saveGoalAmountText)
+            appData.setBudgetName(budgetName)
+            appData.setYearlyEarnings(stringVal: yearlyEarningsString)
+            appData.setBudgetCycle(selectedCycle)
+            appData.setBudgetStartDate(budgetStartDate)
+            saveGoalText = appData.SetSaveGoalText(stringVal: saveGoalText)
+            saveGoalAmountText = appData.SetSaveGoalAmount(stringVal: saveGoalAmountText)
+            appData.finalizeBudgetDetails()
+            appData.Save()
+        }
+        .onAppear {
+            self.budgetName = appData.data.budgetName
+            let earnings = appData.data.yearlyEarnings
+            self.yearlyEarningsString = earnings == 0 ? "" : ConvertValue.FloatToCurrency(floatVal: earnings)
+            self.selectedCycle = appData.data.budgetCycle
+            self.budgetStartDate = appData.data.budgetStartDate
+            self.saveGoalText = appData.data.saveGoalText
+            self.saveGoalAmountText = appData.data.saveGoalAmount == 0 ? "" : ConvertValue.FloatToCurrency(floatVal: appData.data.saveGoalAmount)
         }
     }
     
     func CloseSettings(){
+        hideKeyboard()
         appManager.menuState = .mainMenu
     }
     
     func ResetApp(){
-        budgetAmountText = ""
+        budgetName = ""
+        yearlyEarningsString = ""
+        selectedCycle = .monthly
+        budgetStartDate = Date()
         saveGoalText = ""
         saveGoalAmountText = ""
         appManager.Reset()
     }
+
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
 }
+
+#if DEBUG
+struct AppSettings_Previews: PreviewProvider {
+    static var previews: some View {
+        AppSettings(appManager: AppManager.instance, appData: AppDataManager.instance)
+    }
+}
+#endif

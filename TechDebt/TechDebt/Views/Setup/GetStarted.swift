@@ -15,14 +15,14 @@ struct GetStarted: View {
                 .padding(.bottom, 30)
 
             Text("Welcome to Budgie!")
-                .font(.largeTitle)
-                .fontWeight(.bold)
+                .font(StaticAppFonts.largeTitle)
+                .foregroundColor(StaticAppColors.primaryText)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
             Text("Let's get your finances organized. Tap below to begin setting up your budget.")
-                .font(.headline)
-                .foregroundColor(.gray)
+                .font(StaticAppFonts.headline)
+                .foregroundColor(StaticAppColors.secondaryText)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
@@ -33,23 +33,18 @@ struct GetStarted: View {
                 appManager.menuState = .sBudgetDetails
             }) {
                 Text("Get Started")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.accentColor)
-                    .cornerRadius(12)
-                    .shadow(radius: 5)
+                    .staticPrimaryButtonStyle()
             }
             .padding(.horizontal, 40)
             .padding(.bottom, 50)
         }
-        .padding()
-        .background(Color(UIColor.systemGroupedBackground).edgesIgnoringSafeArea(.all))
+        .padding(StaticStyleConstants.standardPadding)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(StaticAppColors.primaryBackground.edgesIgnoringSafeArea(.all))
         .onAppear {
-            
-            print("GetStarted view appeared. User has not set up yet.")
+            print("GetStarted view appeared.")
+             print("Static Primary Background: \(String(describing: StaticAppColors.primaryBackground))")
+             print("Static Primary Text: \(String(describing: StaticAppColors.primaryText))")
         }
     }
 }

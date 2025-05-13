@@ -3,7 +3,6 @@ import SwiftUI
 struct AddExpenseView: View {
     @ObservedObject var appData: AppDataManager
     @Environment(\.dismiss) var dismiss
-    @Environment(\.appTheme) var theme
 
     @State private var expenseName: String = ""
     @State private var expenseAmountString: String = ""
@@ -18,31 +17,29 @@ struct AddExpenseView: View {
         NavigationView {
             Form {
                 TextField("Expense Name (e.g., Rent, Netflix)", text: $expenseName)
-                    .font(theme.fonts.body)
-                    .foregroundColor(theme.colors.primaryText)
+                    .font(StaticAppFonts.body)
 
                 TextField("Amount", text: $expenseAmountString)
-                    .font(theme.fonts.body)
-                    .foregroundColor(theme.colors.primaryText)
+                    .font(StaticAppFonts.body)
                     .keyboardType(.decimalPad)
 
                 Picker(selection: $selectedRecurrence) {
                     ForEach(ExpenseRecurrence.allCases) { recurrence in
                         Text(recurrence.rawValue)
-                            .font(theme.fonts.body)
-                            .foregroundColor(theme.colors.primaryText)
+                            .font(StaticAppFonts.body)
                             .tag(recurrence)
                     }
                 } label: {
                     Text("Frequency")
-                        .font(theme.fonts.body)
-                        .foregroundColor(theme.colors.primaryText)
+                        .font(StaticAppFonts.body)
                 }
+                 .tint(StaticAppColors.primaryAccent)
 
             }
-             .toolbarColorScheme(.dark, for: .navigationBar)
-             .toolbarBackground(theme.colors.primaryAccent, for: .navigationBar)
-             .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(StaticAppColors.primaryAccent, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+
             .navigationTitle("Add Regular Expense")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -50,21 +47,20 @@ struct AddExpenseView: View {
                     Button("Cancel") {
                         dismiss()
                     }
-                    .font(theme.fonts.body)
-                    .tint(theme.colors.accentText)
+                    .font(StaticAppFonts.body)
+                    .tint(StaticAppColors.accentText)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         saveExpense()
                         dismiss()
                     }
-                    .font(theme.fonts.body.weight(.semibold))
+                    .font(StaticAppFonts.body.weight(.semibold))
                     .disabled(!isFormValid)
-                    .tint(theme.colors.accentText)
+                    .tint(StaticAppColors.accentText)
                 }
             }
         }
-        .tint(theme.colors.primaryAccent)
     }
 
     private func saveExpense() {
@@ -82,3 +78,11 @@ struct AddExpenseView: View {
         appData.addRegularExpenditure(newExpense)
     }
 }
+
+#if DEBUG
+struct AddExpenseView_Previews: PreviewProvider {
+    static var previews: some View {
+        AddExpenseView(appData: AppDataManager.instance)
+    }
+}
+#endif
