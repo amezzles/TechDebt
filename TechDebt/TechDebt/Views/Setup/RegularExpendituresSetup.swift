@@ -97,10 +97,6 @@ struct StaticExpenseListBoxView: View {
             if appData.data.regularExpenditures.isEmpty {
                 VStack(spacing: 0) {
                     StaticExpensePlaceholderRowView(text: "Mortgage payment, rent, electricity, water, internet, gym")
-                    StaticCustomListDivider()
-                    StaticExpensePlaceholderRowView()
-                    StaticCustomListDivider()
-                    StaticExpensePlaceholderRowView()
                 }
             } else {
                 List {
@@ -155,7 +151,7 @@ struct StaticExpenseRowView: View {
 
     var recurrenceText: String {
         if let recurrence = ExpenseRecurrence.allCases.first(where: { $0.days == expense.expenditurePeriod }) {
-            return "Every \(recurrence.rawValue)"
+            return "\(recurrence.rawValue)"
         } else {
             return "Every \(expense.expenditurePeriod) days"
         }

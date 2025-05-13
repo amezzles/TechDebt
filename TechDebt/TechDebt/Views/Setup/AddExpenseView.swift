@@ -15,48 +15,70 @@ struct AddExpenseView: View {
 
     var body: some View {
         NavigationView {
-            Form {
-                TextField("Expense Name (e.g., Rent, Netflix)", text: $expenseName)
-                    .font(StaticAppFonts.body)
+            ZStack {
+                StaticAppColors.primaryBackground.edgesIgnoringSafeArea(.all)
+                VStack(spacing: 0) {
+                    Text("Add Regular Expense")
+                        .font(StaticAppFonts.title1.weight(.bold))
+                        .foregroundColor(StaticAppColors.primaryText)
+                        .padding(.top, StaticStyleConstants.standardPadding * 2)
+                        .padding(.bottom, StaticStyleConstants.standardPadding)
 
-                TextField("Amount", text: $expenseAmountString)
-                    .font(StaticAppFonts.body)
-                    .keyboardType(.decimalPad)
 
-                Picker(selection: $selectedRecurrence) {
-                    ForEach(ExpenseRecurrence.allCases) { recurrence in
-                        Text(recurrence.rawValue)
-                            .font(StaticAppFonts.body)
-                            .tag(recurrence)
+                    Form {
+                        Section(header: Text("Details").font(StaticAppFonts.headline).foregroundColor(StaticAppColors.secondaryText)) {
+                            TextField("Expense Name (e.g., Rent, Netflix)", text: $expenseName)
+                                .font(StaticAppFonts.body)
+                                .foregroundColor(StaticAppColors.primaryText)
+                        }
+                        .listRowBackground(StaticAppColors.secondaryBackground)
+
+                        Section(header: Text("Amount & Frequency").font(StaticAppFonts.headline).foregroundColor(StaticAppColors.secondaryText)) {
+                            TextField("Amount", text: $expenseAmountString)
+                                .font(StaticAppFonts.body)
+                                .foregroundColor(StaticAppColors.primaryText)
+                                .keyboardType(.decimalPad)
+                                .listRowBackground(StaticAppColors.secondaryBackground)
+
+                            Picker(selection: $selectedRecurrence) {
+                                ForEach(ExpenseRecurrence.allCases) { recurrence in
+                                    Text(recurrence.rawValue)
+                                        .font(StaticAppFonts.body)
+                                        .tag(recurrence)
+                                }
+                            } label: {
+                                Text("Frequency")
+                                    .font(StaticAppFonts.body)
+                                    .foregroundColor(StaticAppColors.primaryText)
+                            }
+                            .tint(StaticAppColors.primaryAccent)
+                            .listRowBackground(StaticAppColors.secondaryBackground)
+                        }
                     }
-                } label: {
-                    Text("Frequency")
-                        .font(StaticAppFonts.body)
+                    .scrollContentBackground(.hidden)
+                    .listStyle(.insetGrouped)
+
+                    Spacer()
+
+                    Button(action: {
+                        saveExpense()
+                        dismiss()
+                    }) {
+                        Text("Add Expense")
+                            .staticPrimaryButtonStyle(isEnabled: isFormValid)
+                    }
+                    .disabled(!isFormValid)
+                    .padding(.horizontal, StaticStyleConstants.standardPadding * 2)
+                    .padding(.bottom, StaticStyleConstants.standardPadding * 2)
                 }
-                 .tint(StaticAppColors.primaryAccent)
-
             }
-            .toolbarBackground(StaticAppColors.primaryAccent, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-
-            .navigationTitle("Add Regular Expense")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(true)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
                         dismiss()
                     }
                     .font(StaticAppFonts.body)
-                    .tint(StaticAppColors.accentText)
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        saveExpense()
-                        dismiss()
-                    }
-                    .font(StaticAppFonts.body.weight(.semibold))
-                    .disabled(!isFormValid)
                     .tint(StaticAppColors.accentText)
                 }
             }

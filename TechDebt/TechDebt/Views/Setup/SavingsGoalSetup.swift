@@ -14,45 +14,58 @@ struct SavingsGoalSetup: View {
 
     var body: some View {
         GeometryReader { geometry in
-            VStack(alignment: .center, spacing: 0) {
-                StaticSavingsGoalHeaderView()
+            ZStack {
+                StaticAppColors.primaryBackground.edgesIgnoringSafeArea(.all)
+                VStack(alignment: .center, spacing: 0) {
+                    StaticSavingsGoalHeaderViewOriginalTitles()
+                        .padding(.bottom, StaticStyleConstants.standardPadding * 1.5)
 
-                VStack(spacing: 20) {
-                    TextField("What are you saving for? (e.g., Holiday, New Car)", text: $goalName)
-                        .font(StaticAppFonts.body)
-                        .foregroundColor(StaticAppColors.primaryText)
-                        .padding(StaticStyleConstants.standardPadding / 2)
-                        .background(StaticAppColors.secondaryBackground)
-                        .cornerRadius(StaticStyleConstants.cornerRadius / 2)
-                        .padding(.horizontal, 30)
+                    VStack(alignment: .leading, spacing: StaticStyleConstants.standardPadding) {
+                        Text("Goal Description")
+                            .font(StaticAppFonts.headline)
+                            .foregroundColor(StaticAppColors.secondaryText)
+                            .padding(.leading, 30)
 
+                        TextField("What are you saving for? (e.g., Holiday, New Car)", text: $goalName)
+                            .font(StaticAppFonts.body)
+                            .foregroundColor(StaticAppColors.primaryText)
+                            .padding(StaticStyleConstants.standardPadding * 0.75)
+                            .background(StaticAppColors.secondaryBackground)
+                            .cornerRadius(StaticStyleConstants.cornerRadius)
+                            .padding(.horizontal, 30)
 
-                    TextField("How much do you want to save?", text: $goalAmountString)
-                        .font(StaticAppFonts.body)
-                        .foregroundColor(StaticAppColors.primaryText)
-                        .keyboardType(.decimalPad)
-                        .padding(StaticStyleConstants.standardPadding / 2)
-                        .background(StaticAppColors.secondaryBackground)
-                        .cornerRadius(StaticStyleConstants.cornerRadius / 2)
-                        .padding(.horizontal, 30)
+                        Text("Target Amount")
+                            .font(StaticAppFonts.headline)
+                            .foregroundColor(StaticAppColors.secondaryText)
+                            .padding(.leading, 30)
+                            .padding(.top, StaticStyleConstants.standardPadding)
+
+                        TextField("How much do you want to save? (\(Locale.current.currencySymbol ?? "$"))", text: $goalAmountString)
+                            .font(StaticAppFonts.body)
+                            .foregroundColor(StaticAppColors.primaryText)
+                            .keyboardType(.decimalPad)
+                            .padding(StaticStyleConstants.standardPadding * 0.75)
+                            .background(StaticAppColors.secondaryBackground)
+                            .cornerRadius(StaticStyleConstants.cornerRadius)
+                            .padding(.horizontal, 30)
+                    }
+                    .padding(.top, StaticStyleConstants.standardPadding)
+
+                    Spacer()
+
+                    Button(action: {
+                        saveSavingsGoal()
+                        appManager.menuState = .mainMenu
+                    }) {
+                        Text("Finish Setup")
+                            .staticPrimaryButtonStyle(isEnabled: isFormValid)
+                    }
+                    .disabled(!isFormValid)
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, geometry.safeAreaInsets.bottom > 0 ? StaticStyleConstants.standardPadding : 30 + StaticStyleConstants.standardPadding)
                 }
-                .padding(.top, 30)
-
-                Spacer()
-
-                Button(action: {
-                    saveSavingsGoal()
-                    appManager.menuState = .mainMenu
-                }) {
-                    Text("Finish Setup")
-                        .staticPrimaryButtonStyle(isEnabled: isFormValid)
-                }
-                .disabled(!isFormValid)
-                .padding(.horizontal, 40)
-                .padding(.bottom, geometry.safeAreaInsets.bottom > 0 ? 0 : 30)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(StaticAppColors.primaryBackground.edgesIgnoringSafeArea(.all))
             .onAppear {
                 loadExistingData()
             }
@@ -65,7 +78,7 @@ struct SavingsGoalSetup: View {
     private func loadExistingData() {
         goalName = appData.data.saveGoalText
         if appData.data.saveGoalAmount > 0 {
-            goalAmountString = ConvertValue.FloatToCurrency(floatVal: appData.data.saveGoalAmount)
+            goalAmountString = ConvertValue.FloatToCurrency(floatVal: appData.data.saveGoalAmount).replacingOccurrences(of: Locale.current.currencySymbol ?? "$", with: "")
         } else {
             goalAmountString = ""
         }
@@ -83,7 +96,7 @@ struct SavingsGoalSetup: View {
      }
 }
 
-struct StaticSavingsGoalHeaderView: View {
+struct StaticSavingsGoalHeaderViewOriginalTitles: View {
     var body: some View {
         VStack {
             Text("Make a Budget")
