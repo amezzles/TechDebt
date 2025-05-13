@@ -112,6 +112,7 @@ struct BudgetSetupDetailsView: View {
                         appData.setBudgetStartDate(budgetStartDate)
                         appData.finalizeBudgetDetails()
                         appManager.menuState = .sRegularExpenditure
+                        appData.data.budgetRemaining = appData.data.budgetAmount
                     }) {
                         Text("Continue")
                             .staticPrimaryButtonStyle(isEnabled: isFormValid)
